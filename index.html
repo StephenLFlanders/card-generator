@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Playing Card Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style for the canvas to maintain aspect ratio and look good */
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 10px; /* Rounded corners for the canvas itself */
+            max-width: 400px; /* Max width of the card, matching canvas setting */
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            aspect-ratio: 400 / 600; /* Typical card aspect ratio */
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        .input-group input[type="text"], .input-group input[type="number"], .input-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column for new stats */
+            gap: 0.75rem;
+        }
+         /* Custom modal for alerts */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 400px;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .modal-close-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-4xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">Playing Card Generator</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column: Inputs -->
+            <div class="space-y-4">
+                <div class="input-group">
+                    <label for="imageLoader" class="text-gray-700">Upload Character Image:</label>
+                    <input type="file" id="imageLoader" accept="image/*" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+                </div>
+
+                <h2 class="text-xl font-semibold text-gray-700 mt-4 border-b pb-2">Player Stats</h2>
+                 <div class="input-group">
+                    <label for="playerName" class="text-gray-700">Player Name:</label>
+                    <input type="text" id="playerName" placeholder="RUNNER X" value="BOLT">
+                </div>
+                
+                <div class="stat-grid">
+                    <div class="input-group">
+                        <label for="mileTime" class="text-gray-700">Mile Time:</label>
+                        <input type="text" id="mileTime" placeholder="4:30" value="4:15">
+                    </div>
+                    <div class="input-group">
+                        <label for="fiveMileTime" class="text-gray-700">5 Mile Time:</label>
+                        <input type="text" id="fiveMileTime" placeholder="25:00" value="23:50">
+                    </div>
+                    <div class="input-group">
+                        <label for="tenMileTime" class="text-gray-700">10 Mile Time:</label>
+                        <input type="text" id="tenMileTime" placeholder="55:00" value="52:30">
+                    </div>
+                </div>
+
+                <button id="generateBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-150 ease-in-out mt-6">
+                    Generate Card
+                </button>
+            </div>
+
+            <!-- Right Column: Canvas and Download -->
+            <div class="flex flex-col items-center space-y-4">
+                <h2 class="text-xl font-semibold text-gray-700">Card Preview</h2>
+                <canvas id="cardCanvas"></canvas>
+                <a id="downloadLnk" class="w-full max-w-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-150 ease-in-out text-center hidden" download="custom-card.png">
+                    Download Card
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts -->
+    <div id="customAlertModal" class="modal">
+        <div class="modal-content">
+            <p id="customAlertMessage"></p>
+            <button id="customAlertCloseButton" class="modal-close-button">OK</button>
+        </div>
+    </div>
+
+    <!-- TypeScript compiled JavaScript -->
+    <script src="./dist/card-generator.js"></script>
+</body>
+</html>
